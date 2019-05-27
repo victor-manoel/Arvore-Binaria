@@ -1,0 +1,116 @@
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+typedef struct Node node;
+struct Node{
+  int value;
+  node* left;
+  node* right;
+};
+
+node* insert(node* root, int value){
+  node* neo = (node*) malloc(sizeof(node));
+
+  neo -> left = NULL;
+  neo -> right = NULL;
+
+  neo -> value = value;
+
+  if(root == NULL){
+    root = neo;
+  }else{
+    node* rootAux = root;
+    node* prev;
+    while (rootAux != NULL){
+      prev = rootAux;
+      if(rootAux -> value>= value){
+        rootAux  = rootAux -> left;
+      }else{
+        rootAux  = rootAux -> right;
+      }
+    }
+    if(prev -> value >= value){
+      prev -> left = neo;
+    }else{
+      prev -> right = neo;
+    }
+  
+  }
+  return root;
+}
+
+bool search(Node *root, int value){
+  while(root != NULL){
+  if(value == root->value){
+  return true;
+  }else if(value < root->value){
+    root=root->left;
+  }else{
+    root=root->right;
+    }
+  }
+ return false;
+}
+
+
+node* erase(Node* root, int v){
+  if(root==NULL){
+    return root;
+  }else{
+    node* AuxRem=root;
+    node* AuxPrev=NULL;
+    while(AuxRem != NULL){
+      if(AuxRem->value==v){
+        break;
+      }
+    AuxPrev=AuxRem;
+    if(v<=AuxRem->value){
+      AuxRem=AuxRem->left;  
+    }else{
+      AuxRem=AuxRem->right;
+      }
+	}
+      node* Rootleft = AuxRem->left;
+      node* Bigright = Rootleft;
+      while(Bigright->right!=NULL){
+        Rootleft = Bigright;
+        Bigright = Bigright->right;
+      }
+      Rootleft->right=Bigright->left;
+      Bigright->left=AuxRem->right;
+      Bigright->right=AuxRem->left;
+      if(v<=AuxPrev->value){
+        AuxPrev->left=Bigright;
+      }else{
+        AuxPrev->right=Bigright;
+      }
+	  free(AuxRem);
+    
+  }
+  
+   return root;                       
+}
+
+void print( node* root ){
+  if(root != NULL){
+    cout<<root->value<<endl;
+    print(root->left);
+    print(root->right);
+  }
+}
+int main() {
+  node* root = NULL;
+  root = insert(root , 18);
+  root = insert(root , 8);
+  root = insert(root , 6);
+  root = insert(root , 15);
+  root = insert(root , 17);
+  root = insert(root , 10);
+  root = insert(root , 9);
+  root = insert(root , 13);
+  root = insert(root , 12);
+ 
+  root = erase(root, 15);
+print(root);
+}
